@@ -1,0 +1,4 @@
+chorescore-client
+=================
+
+ChoreScore SWBCN 
