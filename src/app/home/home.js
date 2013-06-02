@@ -216,6 +216,8 @@ angular.module( 'ngBoilerplate.home', [
     $scope.users = User.query();
 
 
+    $scope.resultados = Results.get();
+
     var STORAGE_ID = 'todos-angularjs';
     //todoMVC 
 
@@ -284,7 +286,8 @@ angular.module( 'ngBoilerplate.home', [
     };
 
     $scope.score = function (todo, points) {
-        var scoreId = todo.substring(todo.substring(0, todo.length -1).lastIndexOf('/')+1, todo.length -1);
+        var url = todo.url;
+        var scoreId = url.substring(url.substring(0, url.length -1).lastIndexOf('/')+1, url.length -1);
         var newScore = new Score({chore:scoreId, groupId:'1', user:$scope.userId, period:'3', weight:points});
         newScore.$save({}, function(u, responseHeaders) {
             console.log('saved score');
