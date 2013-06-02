@@ -196,7 +196,8 @@ angular.module( 'ngBoilerplate.home', [
     titleService.setTitle( 'Home' );
     console.log(3000);
     //var urlApiBase = 'http://localhost:port/api';
-    var urlApiBase = 'http://192.168.10.178:port/api';
+    //var urlApiBase = 'http://192.168.10.178:port/api';
+    var urlApiBase = 'http://localhost:port/api';
 
 
     var portN = ':8080';
