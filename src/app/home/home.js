@@ -208,7 +208,7 @@ angular.module( 'ngBoilerplate.home', [
     console.log(4000);
 
     var scoreApi = '/scores/:scoresId';
-    var Chore = $resource(urlApiBase + scoreApi, {port:portN}, { });
+    var Score = $resource(urlApiBase + scoreApi, {port:portN}, { });
 
     var resultsApi = '/results/';
     var Results = $resource(urlApiBase + resultsApi, {port:portN}, { });
@@ -282,6 +282,16 @@ angular.module( 'ngBoilerplate.home', [
     $scope.removeTodo = function (todo) {
         todos.splice(todos.indexOf(todo), 1);
     };
+
+    $scope.score = function (todo, points) {
+        var scoreId = todo.substring(todo.substring(0, todo.length -1).lastIndexOf('/')+1, todo.length -1);
+        var newScore = new Score({chore:scoreId, groupId:'1', user:$scope.userId, period:'3', weight:points});
+        newScore.$save({}, function(u, responseHeaders) {
+            console.log('saved score');
+            console.log(u);
+        });
+    };
+
 
     $scope.clearCompletedTodos = function () {
         $scope.todos = todos = todos.filter(function (val) {

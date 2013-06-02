@@ -3,8 +3,8 @@
 
   <p class="lead">
     <h2>Pick User</h2>
-     <input type="radio" ng-model="color" value="1"> Adam <br/>
-     <input type="radio" ng-model="color" value="2"> Eve <br/>
+     <input type="radio" ng-model="userId" value="1"> Adam <br/>
+     <input type="radio" ng-model="userId" value="2"> Eve <br/>
   </p>
     <section id="todoapp">
         
@@ -19,10 +19,11 @@
             <ul id="todo-list">
                 <li ng-repeat="todo in todos.results" >
                     <div class="view">
-                        <input class="toggle" type="checkbox" ng-model="todo.completed">
-                        <i class="toggle icon-check" ng-click="removeTodo(todo)"></i>
+                        <i class="icon-check" ng-click="removeTodo(todo)"></i>
                         <label ng-dblclick="editTodo(todo)">{{todo.description}}</label>
-                        <i class="destroy icon-remove" ng-click="removeTodo(todo)"></i>
+                        <i class="destroy icon-star-empty" ng-click="score(todo, 1)"></i>
+                        <i class="destroy icon-star-half-empty" ng-click="score(todo, 2)"></i>
+                        <i class="destroy icon-star" ng-click="score(todo, 3)"></i>
                     </div>
                     <form ng-submit="doneEditing(todo)">
                         <input class="edit" ng-model="todo.title" todo-blur="doneEditing(todo)" todo-focus="todo == editedTodo">
