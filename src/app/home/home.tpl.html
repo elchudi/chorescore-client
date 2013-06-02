@@ -2,27 +2,25 @@
   <h1>ChoreScore</h1>
 
   <p class="lead">
-        <br />
-    users 
-    {{ users }}
-        <br />
-    todos
-    {{ todos }}
+    <h2>Pick User</h2>
+     <input type="radio" ng-model="color" value="1"> Adam <br/>
+     <input type="radio" ng-model="color" value="2"> Eve <br/>
   </p>
     <section id="todoapp">
+        
         <header id="header">
-            <h1>todos</h1>
+            <h1>Chores</h1>
             <form id="todo-form" ng-submit="addTodo()">
                 <input id="new-todo" placeholder="What needs to be done?" ng-model="newTodo" autofocus>
             </form>
         </header>
-        <section id="main" ng-show="todos.length" ng-cloak>
+        <section id="main" ng-show="todos.results.length" ng-cloak>
             <input id="toggle-all" type="checkbox" ng-model="allChecked" ng-click="markAll(allChecked)">
-            <label for="toggle-all">Mark all as complete</label>
             <ul id="todo-list">
-                <li ng-repeat="todo in todos.results" ng-class="{completed: todo.completed, editing: todo == editedTodo}">
+                <li ng-repeat="todo in todos.results" >
                     <div class="view">
                         <input class="toggle" type="checkbox" ng-model="todo.completed">
+                        <i class="toggle icon-check" ng-click="removeTodo(todo)"></i>
                         <label ng-dblclick="editTodo(todo)">{{todo.description}}</label>
                         <i class="destroy icon-remove" ng-click="removeTodo(todo)"></i>
                     </div>
@@ -32,7 +30,7 @@
                 </li>
             </ul>
         </section>
-        <footer id="footer" ng-show="todos.length" ng-cloak>
+        <footer id="footer" ng-show="todos.results.length" ng-cloak>
         </footer>
     </section>
 

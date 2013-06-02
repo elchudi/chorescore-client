@@ -195,10 +195,11 @@ angular.module( 'ngBoilerplate.home', [
 .controller( 'HomeCtrl', function HomeController( $scope, titleService , $resource, $location, filterFilter, $http) {
     titleService.setTitle( 'Home' );
     console.log(3000);
-    var urlApiBase = 'http://localhost:port/api';
+    //var urlApiBase = 'http://localhost:port/api';
+    var urlApiBase = 'http://192.168.10.178:port/api';
 
 
-    var portN = ':8000';
+    var portN = ':8080';
     var userApi = '/users/:userId';
     var User = $resource(urlApiBase + userApi, {port:portN}, { });
     
@@ -206,21 +207,17 @@ angular.module( 'ngBoilerplate.home', [
     var Chore = $resource(urlApiBase + choreApi, {port:portN}, { });
     console.log(4000);
 
+    var scoreApi = '/scores/:scoresId';
+    var Chore = $resource(urlApiBase + scoreApi, {port:portN}, { });
 
+    var resultsApi = '/results/';
+    var Results = $resource(urlApiBase + resultsApi, {port:portN}, { });
 
     $scope.users = User.query();
-    $scope.chores = User.query();
 
 
     var STORAGE_ID = 'todos-angularjs';
     //todoMVC 
-    var todoStorage =  (function () {
-
-        return {
-                        localStorage.setItem(STORAGE_ID, JSON.stringify(todos));
-                }
-        };
-    }());
 
     console.log(6000);
 
@@ -261,6 +258,8 @@ angular.module( 'ngBoilerplate.home', [
                 console.log(u);
                 console.log(responseHeaders);
                 $scope.newTodo = '';
+                var todos = $scope.todos = Chore.get();
+                $scope.chores = $scope.todos.results;
         });
 
     };
@@ -275,6 +274,7 @@ angular.module( 'ngBoilerplate.home', [
         todo.title = todo.title.trim();
 
         if (!todo.title) {
+            //Chore.remove()
             $scope.removeTodo(todo);
         }
     };
