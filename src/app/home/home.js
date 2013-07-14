@@ -195,7 +195,7 @@ angular.module( 'ngBoilerplate.home', [
 .controller( 'HomeCtrl', function HomeController( $scope, titleService , $resource, $location, filterFilter, $http, $q) {
     var _ = window._;  
     $scope.options = {
-        userId:0
+        user:undefined
     };
 
     titleService.setTitle( 'Home' );
@@ -293,8 +293,8 @@ angular.module( 'ngBoilerplate.home', [
 
     $scope.score = function (chore, points) {
         console.log('savingScore');
-        console.log({chore:chore.id, group:hardcoded_group, user:$scope.options.userId, period:hardcoded_period, weight:points});
-        var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.userId, period:hardcoded_period, weight:points});
+        console.log({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period, weight:points});
+        var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period, weight:points});
         newScore.$save({}, function(u, responseHeaders) {
             $scope.resultado = Results.get();
             console.log('saved score');
@@ -353,11 +353,41 @@ angular.module( 'ngBoilerplate.home', [
 
     setResources('User');
 
-    /*
-    var attachScoresToChores = funtion(){
-        _.filter($scope.scores);
+    
+    var attachScoresToChores = function(){
+        /*
+        var userScores = _.filter($scope.scores, function(score){
+            return (score.user === $scope.options.userId);
+        });
+        */
+        _.each($scope.chores, function(chore){
+            var choreScore = _.find($scope.scores, function(score) {
+              //debugger;
+              return (score.chore == chore.id) && (score.user == $scope.options.user.id);
+            });
+            console.log('foundScore!');
+            console.log(choreScore); 
+            if(typeof choreScore === 'undefined'){
+                choreScore = {
+                    chore: chore.id,
+                    count: 0,
+                    group: 1,
+                    like: false,
+                    period: 3,
+                    user: $scope.options.user.id,
+                    weight: 3
+                }; 
+            }
+            chore.score = choreScore;
+        });
     };
-    */
+
+    $scope.userChanged = function(){
+
+        console.log('user changed!');
+        attachScoresToChores();
+        
+    };
 
     $q.all([
       setResources('Score'),
