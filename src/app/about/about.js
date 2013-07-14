@@ -1,5 +1,4 @@
 angular.module( 'ngBoilerplate.about', [
-  'placeholders',
   'ui.bootstrap',
   'titleService'
 ])
