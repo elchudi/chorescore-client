@@ -11,7 +11,7 @@ module.exports = function ( grunt ) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-karma');
+  //grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-ngmin');
 
   /**
@@ -258,7 +258,6 @@ module.exports = function ( grunt ) {
 
     /**
      * The Karma configurations.
-     */
     karma: {
       options: {
         configFile: 'karma/karma-unit.js'
@@ -270,6 +269,7 @@ module.exports = function ( grunt ) {
         singleRun: true
       }
     },
+     */
 
     /**
      * And for rapid development, we have a watch set up that checks to see if
@@ -312,7 +312,7 @@ module.exports = function ( grunt ) {
         files: [ 
           '<%= src.js %>'
         ],
-        tasks: [ 'jshint:src', 'karma:unit:run', 'concat:dist', 'ngmin:dist', 'uglify:dist' ]
+        tasks: [ 'jshint:src', 'concat:dist', 'ngmin:dist', 'uglify:dist' ]
       },
 
       /**
@@ -362,7 +362,7 @@ module.exports = function ( grunt ) {
         files: [
           '<%= src.unit %>'
         ],
-        tasks: [ 'jshint:test', 'karma:unit:run' ],
+        tasks: [ 'jshint:test'  ],
         options: {
           livereload: false
         }
@@ -378,13 +378,13 @@ module.exports = function ( grunt ) {
    * before watching for changes.
    */
   grunt.renameTask( 'watch', 'delta' );
-  grunt.registerTask( 'watch', [ 'default', 'karma:unit', 'delta' ] );
+  grunt.registerTask( 'watch', [ 'default', 'delta' ] );
 
   /**
    * The default task is to build.
    */
   grunt.registerTask( 'default', [ 'build' ] );
-  grunt.registerTask( 'build', ['clean', 'html2js', 'jshint', 'karma:continuous', 'concat', 'ngmin:dist', 'uglify', 'recess', 'index', 'copy'] );
+  grunt.registerTask( 'build', ['clean', 'html2js', 'jshint', 'concat', 'ngmin:dist', 'uglify', 'recess', 'index', 'copy'] );
 
   /**
    * A task to build the project, without some of the slower processes. This is
