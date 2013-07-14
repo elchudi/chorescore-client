@@ -223,7 +223,7 @@ angular.module( 'ngBoilerplate.home', [
 
 
 
-    $scope.resultados = Results.get();
+    $scope.resultado = Results.get();
 
     var STORAGE_ID = 'todos-angularjs';
     //todoMVC 
