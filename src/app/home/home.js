@@ -192,13 +192,13 @@ angular.module( 'ngBoilerplate.home', [
 /**
  * And of course we define a controller for our route.
  */
-.controller( 'HomeCtrl', function HomeController( $scope, titleService , $resource, $location, filterFilter, $http) {
+.controller( 'HomeCtrl', function HomeController( $scope, titleService , $resource, $location, filterFilter, $http, $q) {
+    var _ = window._;  
     titleService.setTitle( 'Home' );
     console.log(3000);
     //var urlApiBase = 'http://localhost:port/api';
     //var urlApiBase = 'http://192.168.10.178:port/api';
     var urlApiBase = 'http://hidden-springs-9866.herokuapp.com/api';
-    
 
 
     var portN = ':8080';
@@ -233,7 +233,7 @@ angular.module( 'ngBoilerplate.home', [
     //debugger;
 
     //Copied from todomvc
-    var todos = $scope.todos = Chore.get();
+    //var todos = $scope.todos = Chore.get();
 
     $scope.newTodo = '';
     $scope.editedTodo = null;
@@ -267,8 +267,9 @@ angular.module( 'ngBoilerplate.home', [
                 console.log(u);
                 console.log(responseHeaders);
                 $scope.newTodo = '';
-                var todos = $scope.todos = Chore.get();
-                $scope.chores = $scope.todos.results;
+                todos = $scope.todos = Chore.get(function(resp){
+                    $scope.chores = resp.results;
+                });
         });
 
     };
@@ -292,10 +293,13 @@ angular.module( 'ngBoilerplate.home', [
         todos.splice(todos.indexOf(todo), 1);
     };
 
+    var hardcoded_period = 3;
+    var hardcoded_group = 1;
+
     $scope.score = function (todo, points) {
         var url = todo.url;
-        var choreId = parseInt (url.substring(url.substring(0, url.length -1).lastIndexOf('/')+1, url.length -1));
-        var newScore = new Score({chore:choreId, group:1, user:$scope.userId, period:3, weight:points});
+        var choreId = parseInt (url.substring(url.substring(0, url.length -1).lastIndexOf('/')+1, url.length -1), 10);
+        var newScore = new Score({chore:choreId, group:hardcoded_group, user:$scope.userId, period:hardcoded_period, weight:points});
         newScore.$save({}, function(u, responseHeaders) {
             $scope.resultado = Results.get();
            console.log('saved score');
@@ -316,6 +320,38 @@ angular.module( 'ngBoilerplate.home', [
             todo.completed = completed;
         });
     };
+
+   function getResources(type) {
+       var d = $q.defer();
+        switch(type){
+            case 'Score':
+                Score.get(function(resp) {
+                    d.resolve();
+                });
+                break;
+            case 'Chore':
+                Chore.get(function(resp) {
+                    $scope.chores = resp.results;
+                    d.resolve();
+               });
+                break;
+        }
+       return d.promise;
+    }
+
+    $q.all([
+      getResources('Score'),
+      getResources('Chore')
+    ]).then(function(data) {
+        console.log('Score & chore resolved!');    
+        console.log('Chore');
+        console.log(Chore);
+        console.log('Score');
+        console.log(Score);
+
+    }); 
+
+
 })
 
 ;
