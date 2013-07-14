@@ -218,7 +218,7 @@ angular.module( 'ngBoilerplate.home', [
         update: {method:"PUT"}
      });
 
-    var resultsApi = '/results/';
+    var resultsApi = '/results';
     var Results = $resource(urlApiBase + resultsApi, {port:portN}, { });
 
 
@@ -422,7 +422,7 @@ angular.module( 'ngBoilerplate.home', [
                     like: false,
                     period: 3,
                     user: $scope.options.user.id,
-                    weight: 3,
+                    weight: 0,
                     fakeScore: true
                 }; 
             }
@@ -430,12 +430,36 @@ angular.module( 'ngBoilerplate.home', [
         });
     };
 
-    $scope.userChanged = function(){
-
-        console.log('user changed!');
-        attachScoresToChores();
+    $scope.toggleDone = function(chore){
+        console.log('toggleDone');
+        if(chore.score.fakeScore){
+            var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period, count:1});
+            newScore.$save({}, function(u, responseHeaders) {
+                $scope.resultado = Results.get();
+                updateAll();
+                console.log('saved score');
+                console.log(u);
+            });
+        }else{
+            Score.get({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period}, function(resp){
+                console.log('respuesta de get grupal');
+                console.log(resp);
+                
+                Score.get({scoreId:resp.results[0].id}, function(respScore){
+                    console.log('respuesta de get individual');
+                    console.log(respScore);
+                    
+                    respScore.count = chore.score.count ? 0 : 1;
+                    respScore.$update({},function(){
+                        $scope.resultado = Results.get();
+                        updateAll();
+                    });
+                });
+            });
+        }
         
     };
+
 
     var updateAll = function(){
         $q.all([
@@ -447,10 +471,18 @@ angular.module( 'ngBoilerplate.home', [
             console.log($scope.chores);
             console.log('Score');
             console.log($scope.scores);
+            attachScoresToChores();
 
         }); 
     };
     
+    $scope.userChanged = function(){
+
+        console.log('user changed!');
+        updateAll();
+        
+    };
+
     updateAll();
 
 })

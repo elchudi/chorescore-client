@@ -16,7 +16,7 @@
     </table>
 
   </p>
-    <section id="todoapp">
+    <section id="todoapp" ng-show="options.user && chores.length">
 
         <header id="header">
             <h1>Chores</h1>
@@ -26,11 +26,10 @@
                 <input id="new-todo" placeholder="What needs to be done?" ng-model="newTodo" autofocus>
             </form>
         </header>
-        <section id="main" ng-show="chores.length" ng-cloak>
+        <section id="main"  ng-cloak >
             <input id="toggle-all" type="checkbox" ng-model="allChecked" ng-click="markAll(allChecked)">
-            <ul id="todo-list">
-                <li ng-repeat="chore in chores" >
-                    {{ chore }}
+            <ul id="todo-list" >
+                <li ng-repeat="chore in chores | orderBy:id" >
                     <div class="view">
                         <label ng-click="check(chore)">{{chore.description}}</label>
                         <i class="icon-star" ng-class="{scoreSoft:chore.score.weight===1}" ng-click="setScoreDificulty(chore, 1)"></i>
@@ -38,6 +37,7 @@
                         <i class="icon-star" ng-class="{scoreSoft:chore.score.weight===3}" ng-click="setScoreDificulty(chore, 3)"></i>
                         
                         <i class="" ng-class="{true:'icon-thumbs-up', false:'icon-thumbs-down'}[chore.score.like===true]"  ng-click="setLike(chore)"></i>
+                        <i class="" ng-class="{true:'icon-check', false:'icon-check-empty'}[chore.score.count===1]"  ng-click="toggleDone(chore)"></i>
                     </div>
                     <form ng-submit="doneEditing(chore)">
                         <input class="edit" ng-model="chore.title" todo-blur="doneEditing(chore)" todo-focus="chore == editedTodo">
