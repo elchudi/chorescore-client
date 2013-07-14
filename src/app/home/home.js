@@ -294,6 +294,8 @@ angular.module( 'ngBoilerplate.home', [
     var hardcoded_group = 1;
 
     $scope.score = function (chore, points) {
+        console.log('savingScore');
+        console.log({chore:chore.id, group:hardcoded_group, user:$scope.options.userId, period:hardcoded_period, weight:points});
         var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.userId, period:hardcoded_period, weight:points});
         newScore.$save({}, function(u, responseHeaders) {
             $scope.resultado = Results.get();
@@ -333,7 +335,7 @@ angular.module( 'ngBoilerplate.home', [
             case 'Chore':
                 Chore.get(function(resp) {
                     $scope.chores = resp.results;
-                    _.each($scope.users, extractAndSetId);
+                    _.each($scope.chores, extractAndSetId);
                     d.resolve();
                });
                 break;
