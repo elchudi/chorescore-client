@@ -1,18 +1,24 @@
 <div class="jumbotron">
   <p class="lead">
+    <table>
+      <tr>
+        <td>
     Use as:
     <select name="user" ng-model="options.user" ng-options="user.username for user in users" id="user" ng-change="userChanged()" >
     </select>
+        </td>
+        <td ng-repeat="score in resultado.results" >
+                    {{ score.user}} : {{ score.points }} / {{ score.total }}
+        </td>
+      </tr>
+    </table>
+
   </p>
     <section id="todoapp">
 
         <header id="header">
             <h1>Chores</h1>
 <h3>
-                <li ng-repeat="score in resultado.results" >
-
-                    {{ score.user}} : {{ score.points }} / {{ score.total }}
-                </li>
 </h3>
             <form id="todo-form" ng-submit="addTodo()">
                 <input id="new-todo" placeholder="What needs to be done?" ng-model="newTodo" autofocus>
@@ -37,12 +43,6 @@
                     </form>
                 </li>
             </ul>
-<h3>
-                <li ng-repeat="score in resultado.results" >
-
-                    {{ score.user}} : {{ score.points }} / {{ score.total }}
-                </li>
-</h3>
         </section>
         <footer id="footer" ng-show="chores.length" ng-cloak>
         </footer>
