@@ -293,8 +293,8 @@ angular.module( 'ngBoilerplate.home', [
     var hardcoded_period = 3;
     var hardcoded_group = 1;
 
-    $scope.score = function (todo, points) {
-        var newScore = new Score({chore:choreId, group:hardcoded_group, user:$scope.options.userId, period:hardcoded_period, weight:points});
+    $scope.score = function (chore, points) {
+        var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.userId, period:hardcoded_period, weight:points});
         newScore.$save({}, function(u, responseHeaders) {
             $scope.resultado = Results.get();
            console.log('saved score');
