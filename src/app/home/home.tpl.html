@@ -8,7 +8,9 @@
     </select>
         </td>
         <td ng-repeat="score in resultado.results" >
-                    {{ score.user}} : {{ score.points }} / {{ score.total }}
+          <h4>
+          <div ng-repeat="user in users | filter:{id:score.user}"> {{ user.username }} </div><br/> {{ score.points }} / {{ score.total }}
+          </h4>
         </td>
       </tr>
     </table>
