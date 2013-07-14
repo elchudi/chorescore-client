@@ -213,8 +213,10 @@ angular.module( 'ngBoilerplate.home', [
     var Chore = $resource(urlApiBase + choreApi, {port:portN}, { });
     console.log(4000);
 
-    var scoreApi = '/scores/:scoresId';
-    var Score = $resource(urlApiBase + scoreApi, {port:portN}, { });
+    var scoreApi = '/scores/:scoreId';
+    var Score = $resource(urlApiBase + scoreApi, {port:portN, scoreId:'@id'}, {
+        update: {method:"PUT"}
+     });
 
     var resultsApi = '/results/';
     var Results = $resource(urlApiBase + resultsApi, {port:portN}, { });
@@ -291,15 +293,29 @@ angular.module( 'ngBoilerplate.home', [
     var hardcoded_period = 3;
     var hardcoded_group = 1;
 
-    $scope.score = function (chore, points) {
-        console.log('savingScore');
+    $scope.setScoreDificulty = function (chore, points) {
+        console.log('savingDificulty');
         console.log({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period, weight:points});
-        var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period, weight:points});
-        newScore.$save({}, function(u, responseHeaders) {
-            $scope.resultado = Results.get();
-            console.log('saved score');
-            console.log(u);
-        });
+        if(chore.score.fakeScore){
+            var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period, weight:points});
+            newScore.$save({}, function(u, responseHeaders) {
+                $scope.resultado = Results.get();
+                console.log('saved score');
+                console.log(u);
+            });
+        }else{
+            Score.get({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period}, function(resp){
+                console.log('respuesta de get grupal');
+                console.log(resp);
+                
+                Score.get({scoreId:resp.results[0].id}, function(respScore){
+                    console.log('respuesta de get individual');
+                    console.log(respScore);
+                    respScore.weight = points;
+                    respScore.$update({});
+                });
+            });
+        }
     };
 
 
@@ -375,7 +391,8 @@ angular.module( 'ngBoilerplate.home', [
                     like: false,
                     period: 3,
                     user: $scope.options.user.id,
-                    weight: 3
+                    weight: 3,
+                    fakeScore: true
                 }; 
             }
             chore.score = choreScore;
