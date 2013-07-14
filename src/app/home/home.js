@@ -196,7 +196,9 @@ angular.module( 'ngBoilerplate.home', [
     titleService.setTitle( 'Home' );
     console.log(3000);
     //var urlApiBase = 'http://localhost:port/api';
-    var urlApiBase = 'http://192.168.10.178:port/api';
+    //var urlApiBase = 'http://192.168.10.178:port/api';
+    var urlApiBase = 'http://hidden-springs-9866.herokuapp.com/api';
+    
 
 
     var portN = ':8080';
@@ -213,7 +215,12 @@ angular.module( 'ngBoilerplate.home', [
     var resultsApi = '/results/';
     var Results = $resource(urlApiBase + resultsApi, {port:portN}, { });
 
-    $scope.users = User.query();
+    $scope.users = User.get(function (resp){
+        console.log('get de users');
+        console.log(resp);
+        $scope.users = resp.results; 
+        
+    });
 
 
     $scope.resultados = Results.get();
