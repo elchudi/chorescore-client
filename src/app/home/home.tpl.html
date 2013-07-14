@@ -3,8 +3,9 @@
 
   <p class="lead">
     <h2>Pick User</h2>
-     <input type="radio" ng-model="userId" value="1" ng-checked="model"> Adam <br/>
-     <input type="radio" ng-model="userId" value="2"> Eve <br/>
+        <label ng-repeat="user in users">
+            <input type="radio" name="pageSet" ng-model="userId" ng-checked="model" ng-value="user.id" />{{user.username}}
+        </label> 
   </p>
     <section id="todoapp">
         
