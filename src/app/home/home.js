@@ -266,7 +266,7 @@ angular.module( 'ngBoilerplate.home', [
                 console.log(u);
                 console.log(responseHeaders);
                 $scope.newTodo = '';
-                setResources('Chore');
+                updateAll();
         });
 
     };
