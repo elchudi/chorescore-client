@@ -194,6 +194,10 @@ angular.module( 'ngBoilerplate.home', [
  */
 .controller( 'HomeCtrl', function HomeController( $scope, titleService , $resource, $location, filterFilter, $http, $q) {
     var _ = window._;  
+    $scope.options = {
+        userId:0
+    };
+
     titleService.setTitle( 'Home' );
     console.log(3000);
     //var urlApiBase = 'http://localhost:port/api';
@@ -215,12 +219,6 @@ angular.module( 'ngBoilerplate.home', [
     var resultsApi = '/results/';
     var Results = $resource(urlApiBase + resultsApi, {port:portN}, { });
 
-    $scope.users = User.get(function (resp){
-        console.log('get de users');
-        console.log(resp);
-        $scope.users = resp.results; 
-        
-    });
 
 
     $scope.resultados = Results.get();
@@ -233,7 +231,6 @@ angular.module( 'ngBoilerplate.home', [
     //debugger;
 
     //Copied from todomvc
-    //var todos = $scope.todos = Chore.get();
 
     $scope.newTodo = '';
     $scope.editedTodo = null;
@@ -297,9 +294,7 @@ angular.module( 'ngBoilerplate.home', [
     var hardcoded_group = 1;
 
     $scope.score = function (todo, points) {
-        var url = todo.url;
-        var choreId = parseInt (url.substring(url.substring(0, url.length -1).lastIndexOf('/')+1, url.length -1), 10);
-        var newScore = new Score({chore:choreId, group:hardcoded_group, user:$scope.userId, period:hardcoded_period, weight:points});
+        var newScore = new Score({chore:choreId, group:hardcoded_group, user:$scope.options.userId, period:hardcoded_period, weight:points});
         newScore.$save({}, function(u, responseHeaders) {
             $scope.resultado = Results.get();
            console.log('saved score');
@@ -321,7 +316,13 @@ angular.module( 'ngBoilerplate.home', [
         });
     };
 
-   function getResources(type) {
+    var extractAndSetId = function (obj){
+        var url = obj.url;
+        var objId = parseInt (url.substring(url.substring(0, url.length -1).lastIndexOf('/')+1, url.length -1), 10);
+        obj.id = objId;
+    };
+
+   function setResources(type) {
        var d = $q.defer();
         switch(type){
             case 'Score':
@@ -332,16 +333,28 @@ angular.module( 'ngBoilerplate.home', [
             case 'Chore':
                 Chore.get(function(resp) {
                     $scope.chores = resp.results;
+                    _.each($scope.users, extractAndSetId);
                     d.resolve();
                });
+                break;
+            case 'User':
+                $scope.users = User.get(function (resp){
+                    console.log('get de users');
+                    console.log(resp);
+                    $scope.users = resp.results; 
+                    _.each($scope.users, extractAndSetId);
+                    
+                });
                 break;
         }
        return d.promise;
     }
 
+    setResources('User');
+
     $q.all([
-      getResources('Score'),
-      getResources('Chore')
+      setResources('Score'),
+      setResources('Chore')
     ]).then(function(data) {
         console.log('Score & chore resolved!');    
         console.log('Chore');
