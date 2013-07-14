@@ -300,6 +300,7 @@ angular.module( 'ngBoilerplate.home', [
             var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period, weight:points});
             newScore.$save({}, function(u, responseHeaders) {
                 $scope.resultado = Results.get();
+                updateAll();
                 console.log('saved score');
                 console.log(u);
             });
@@ -312,12 +313,42 @@ angular.module( 'ngBoilerplate.home', [
                     console.log('respuesta de get individual');
                     console.log(respScore);
                     respScore.weight = points;
-                    respScore.$update({});
+                    respScore.$update({},function(){
+                        $scope.resultado = Results.get();
+                        updateAll();
+                    });
                 });
             });
         }
     };
 
+    $scope.setLike = function (chore, points) {
+        console.log('savingLike');
+        if(chore.score.fakeScore){
+            var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period, like:true});
+            newScore.$save({}, function(u, responseHeaders) {
+                $scope.resultado = Results.get();
+                updateAll();
+                console.log('saved score');
+                console.log(u);
+            });
+        }else{
+            Score.get({chore:chore.id, group:hardcoded_group, user:$scope.options.user.id, period:hardcoded_period}, function(resp){
+                console.log('respuesta de get grupal');
+                console.log(resp);
+                
+                Score.get({scoreId:resp.results[0].id}, function(respScore){
+                    console.log('respuesta de get individual');
+                    console.log(respScore);
+                    respScore.like = !chore.score.like;
+                    respScore.$update({},function(){
+                        $scope.resultado = Results.get();
+                        updateAll();
+                    });
+                });
+            });
+        }
+    };
 
     $scope.clearCompletedTodos = function () {
         $scope.chores = chores = chores.filter(function (val) {
@@ -406,18 +437,21 @@ angular.module( 'ngBoilerplate.home', [
         
     };
 
-    $q.all([
-      setResources('Score'),
-      setResources('Chore')
-    ]).then(function(data) {
-        console.log('Score & chore resolved!');    
-        console.log('Chore');
-        console.log($scope.chores);
-        console.log('Score');
-        console.log($scope.scores);
+    var updateAll = function(){
+        $q.all([
+          setResources('Score'),
+          setResources('Chore')
+        ]).then(function(data) {
+            console.log('Score & chore resolved!');    
+            console.log('Chore');
+            console.log($scope.chores);
+            console.log('Score');
+            console.log($scope.scores);
 
-    }); 
-
+        }); 
+    };
+    
+    updateAll();
 
 })
 
