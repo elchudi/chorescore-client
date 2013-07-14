@@ -294,8 +294,8 @@ angular.module( 'ngBoilerplate.home', [
 
     $scope.score = function (todo, points) {
         var url = todo.url;
-        var choreId = url.substring(url.substring(0, url.length -1).lastIndexOf('/')+1, url.length -1);
-        var newScore = new Score({chore:choreId, group:'1', user:$scope.userId, period:'3', weight:points});
+        var choreId = parseInt (url.substring(url.substring(0, url.length -1).lastIndexOf('/')+1, url.length -1));
+        var newScore = new Score({chore:choreId, group:1, user:$scope.userId, period:3, weight:points});
         newScore.$save({}, function(u, responseHeaders) {
             $scope.resultado = Results.get();
            console.log('saved score');
