@@ -264,9 +264,7 @@ angular.module( 'ngBoilerplate.home', [
                 console.log(u);
                 console.log(responseHeaders);
                 $scope.newTodo = '';
-                todos = $scope.todos = Chore.get(function(resp){
-                    $scope.chores = resp.results;
-                });
+                setResources('Chore');
         });
 
     };
@@ -287,7 +285,7 @@ angular.module( 'ngBoilerplate.home', [
     };
 
     $scope.removeTodo = function (todo) {
-        todos.splice(todos.indexOf(todo), 1);
+        chores.splice(chores.indexOf(todo), 1);
     };
 
     var hardcoded_period = 3;
@@ -299,28 +297,28 @@ angular.module( 'ngBoilerplate.home', [
         var newScore = new Score({chore:chore.id, group:hardcoded_group, user:$scope.options.userId, period:hardcoded_period, weight:points});
         newScore.$save({}, function(u, responseHeaders) {
             $scope.resultado = Results.get();
-           console.log('saved score');
+            console.log('saved score');
             console.log(u);
         });
     };
 
 
     $scope.clearCompletedTodos = function () {
-        $scope.todos = todos = todos.filter(function (val) {
+        $scope.chores = chores = chores.filter(function (val) {
             return !val.completed;
         });
     };
 
     console.log(9000);
     $scope.markAll = function (completed) {
-        todos.forEach(function (todo) {
+        chores.forEach(function (todo) {
             todo.completed = completed;
         });
     };
 
     var extractAndSetId = function (obj){
         var url = obj.url;
-        var objId = parseInt (url.substring(url.substring(0, url.length -1).lastIndexOf('/')+1, url.length -1), 10);
+        var objId = parseInt (url.substring(url.substring(0, url.length -1).lastIndexOf('/')+1, url.length), 10);
         obj.id = objId;
     };
 
@@ -329,6 +327,7 @@ angular.module( 'ngBoilerplate.home', [
         switch(type){
             case 'Score':
                 Score.get(function(resp) {
+                    $scope.scores = resp.results;
                     d.resolve();
                 });
                 break;
@@ -354,15 +353,21 @@ angular.module( 'ngBoilerplate.home', [
 
     setResources('User');
 
+    /*
+    var attachScoresToChores = funtion(){
+        _.filter($scope.scores);
+    };
+    */
+
     $q.all([
       setResources('Score'),
       setResources('Chore')
     ]).then(function(data) {
         console.log('Score & chore resolved!');    
         console.log('Chore');
-        console.log(Chore);
+        console.log($scope.chores);
         console.log('Score');
-        console.log(Score);
+        console.log($scope.scores);
 
     }); 
 
