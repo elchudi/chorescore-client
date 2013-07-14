@@ -1,19 +1,17 @@
 <div class="jumbotron">
-  <h1>ChoreScore</h1>
-
   <p class="lead">
     <h2>Pick User</h2>
         <label ng-repeat="user in users">
             <input type="radio" name="pageSet" ng-model="userId" ng-checked="model" ng-value="user.id" />{{user.username}}
-        </label> 
+        </label>
   </p>
     <section id="todoapp">
-        
+
         <header id="header">
             <h1>Chores</h1>
 <h3>
                 <li ng-repeat="score in resultado.results" >
-                    
+
                     {{ score.user}} : {{ score.points }} / {{ score.total }}
                 </li>
 </h3>
@@ -39,7 +37,7 @@
             </ul>
 <h3>
                 <li ng-repeat="score in resultado.results" >
-                    
+
                     {{ score.user}} : {{ score.points }} / {{ score.total }}
                 </li>
 </h3>
