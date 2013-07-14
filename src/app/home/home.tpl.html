@@ -1,11 +1,8 @@
 <div class="jumbotron">
   <p class="lead">
-    <h2>Pick User</h2>
-        userId
-        {{ options.userId }}
-        <label ng-repeat="user in users">
-            <input type="radio" name="pageSet" ng-model="$parent.options.userId" ng-checked="model" ng-value="user.id" />{{user.username}}
-        </label> 
+    Use as:
+    <select name="user" ng-model="userId" ng-options="user.username for user in users" id="user">
+    </select>
   </p>
     <section id="todoapp">
 
